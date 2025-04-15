@@ -3,59 +3,68 @@ import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
   final String message;
-  final bool status;
-  final Map<String, dynamic>? errors;
 
-  const Failure({required this.message, required this.status,this.errors});
+  const Failure({
+    required this.message,
+  });
 
   @override
-  List<Object> get props => [message, status];
+  List<Object> get props => [
+        message,
+      ];
 }
 
 class ServerFailure extends Failure {
-  final Map<String, dynamic>? errors;
+
 
   const ServerFailure(
-      {this.errors, required String message, required bool status})
-      : super(message: message, status: status,errors: errors);
+      {required String message,
+      })
+      : super(
+          message: message,
+        );
 
   factory ServerFailure.fromDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
         // TODO: Handle this case.
-        return ServerFailure(message: 'connectionTimeout', status: false);
+        return ServerFailure(message: 'connectionTimeout', );
       case DioExceptionType.badCertificate:
         // TODO: Handle this case.
-        return ServerFailure(message: 'badCertificate', status: false);
+        return ServerFailure(message: 'badCertificate', );
       case DioExceptionType.cancel:
         // TODO: Handle this case.
-        return ServerFailure(message: 'cancel', status: false);
+        return ServerFailure(message: 'cancel', );
       case DioExceptionType.connectionError:
         // TODO: Handle this case.
-        return ServerFailure(message: 'internet connection error', status: false);
+        return ServerFailure(
+            message: 'internet connection error', );
       case DioExceptionType.unknown:
         // TODO: Handle this case.
-        return ServerFailure(message: error.stackTrace.toString(), status: false);
+        return ServerFailure(
+            message: error.stackTrace.toString(), );
       case DioExceptionType.sendTimeout:
         // TODO: Handle this case.
-        return ServerFailure(message: 'sendTimeout', status: false);
+        return ServerFailure(message: 'sendTimeout', );
       case DioExceptionType.receiveTimeout:
         // TODO: Handle this case.
-        return ServerFailure(message: 'receiveTimeout', status: false);
+        return ServerFailure(message: 'receiveTimeout', );
       case DioExceptionType.badResponse:
         return ServerFailure.fromResponse(
             error.response?.statusCode ?? 0, error.response?.data);
       default:
-        return ServerFailure(message: '===>error<===', status: false);
+        return ServerFailure(message: '===>error<===',);
     }
   }
 
   factory ServerFailure.fromResponse(int statuscode, dynamic response) {
     if (statuscode == 401) {
-      return ServerFailure(message: response['message']  , status: false,errors: response['errors']);
+      return ServerFailure(
+          message: response['message'],
+        );
     } else {
       return ServerFailure(
-          message: 'Opps There was an error. Please try again', status: false);
+          message: 'Opps There was an error. Please try again', );
     }
   }
 }

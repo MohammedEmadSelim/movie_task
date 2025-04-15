@@ -1,7 +1,4 @@
-import 'package:egb_task/core/responsive/dimension.dart';
 import 'package:egb_task/core/theme/colors.dart';
-import 'package:egb_task/core/utilts/fontSizer.dart';
-import 'package:egb_task/core/widgets/tap_effect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

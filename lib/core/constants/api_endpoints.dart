@@ -7,4 +7,6 @@ class ApiEndpoints {
   static const String upcomingMovies = '$baseUrl/movie/upcoming';
   static const String movieDetails = '$baseUrl/movie'; // Use with ID: movie/{id}
   static const String searchMovies = '$baseUrl/search/movie';
+  static const String trendingPerDay = '$baseUrl/trending/all/day';
+
 }
