@@ -33,6 +33,7 @@ class CustomTextField extends StatelessWidget {
     this.enableBorder = false,
     this.hitStyle,
     this.style,
+    this.onFieldSubmitted
   }) : super(key: key);
 
   final Widget? suffix;
@@ -62,6 +63,7 @@ class CustomTextField extends StatelessWidget {
   final bool? enableBorder;
   final TextStyle? hitStyle;
   final TextStyle? style;
+  final Function(String)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,7 @@ class CustomTextField extends StatelessWidget {
       height: height ?? 48,
       width: width,
       child: TextFormField(
+        onFieldSubmitted: onFieldSubmitted,
         cursorColor: kGreyText,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         keyboardType: keyboardType,

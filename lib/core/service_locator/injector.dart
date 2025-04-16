@@ -9,6 +9,9 @@ import 'package:egb_task/features/home_screen/domain/use_cases/get_now_playing_u
 import 'package:egb_task/features/home_screen/domain/use_cases/get_top_rated_use_case.dart';
 import 'package:egb_task/features/home_screen/domain/use_cases/get_trending_all_use_cases.dart';
 import 'package:egb_task/features/home_screen/domain/use_cases/get_upcoming_movies.dart';
+import 'package:egb_task/features/search/data/data/remote_data_source.dart';
+import 'package:egb_task/features/search/data/repository/search_repository_impl.dart';
+import 'package:egb_task/features/search/domain/use_cases/search_use_case.dart';
 import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
@@ -41,14 +44,25 @@ Future<void> init() async {
       sl.get<HomeRepositoryImplementation>(),
     ),
   );
+  sl.registerLazySingleton<SearchUseCase>(
+    () => SearchUseCase(
+      sl.get<SearchRepositoryImpl>(),
+    ),
+  );
   ////////////////////////////////////// Repository ///////////////////////////////////////
   sl.registerLazySingleton<HomeRepositoryImplementation>(
     () => HomeRepositoryImplementation(sl.get<RemoteDataSource>()),
+  );
+  sl.registerLazySingleton<SearchRepositoryImpl>(
+    () => SearchRepositoryImpl(sl.get<SearchRemoteDataSource>()),
   );
 
 ////////////////////////////////////// remote data source ///////////////////////////////////////
   sl.registerLazySingleton<RemoteDataSource>(
     () => RemoteDataSource(),
+  );
+  sl.registerLazySingleton<SearchRemoteDataSource>(
+    () => SearchRemoteDataSource(),
   );
 
   ////////////////////////////////////// Network ///////////////////////////////////////
