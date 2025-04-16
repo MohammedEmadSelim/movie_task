@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:egb_task/core/constants/icons.dart';
 import 'package:egb_task/core/responsive/dimension.dart';
+import 'package:egb_task/core/routes/route_path.dart';
 import 'package:egb_task/core/theme/colors.dart';
 import 'package:egb_task/core/widgets/custom_svg.dart';
 import 'package:egb_task/core/widgets/custom_text_field.dart';
+import 'package:egb_task/core/widgets/tap_effect.dart';
 import 'package:egb_task/features/search/presentaion/controllers/search_cubit/search_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,17 +67,23 @@ class _SearchScreenState extends State<SearchScreen> {
                             padding: EdgeInsets.symmetric(vertical: 8.h),
                             child: Row(
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: CachedNetworkImage(
-                                    errorWidget: (context, url, error) => const Icon(
-                                      Icons.image,
+                                TapEffect(
+                                  onClick: () {
+                                    Navigator.pushNamed(context, RoutePath.detailsScreen,
+                                        arguments: {'movie_id': movie.id});
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: CachedNetworkImage(
+                                      errorWidget: (context, url, error) => const Icon(
+                                        Icons.image,
+                                      ),
+                                      imageUrl:
+                                      'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                                      width: 80.w,
+                                      height: 120.h,
+                                      fit: BoxFit.cover,
                                     ),
-                                    imageUrl:
-                                    'https://image.tmdb.org/t/p/w200${movie.posterPath}',
-                                    width: 80.w,
-                                    height: 120.h,
-                                    fit: BoxFit.cover,
                                   ),
                                 ),
                                 SizedBox(width: 12.w),
