@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:egb_task/core/routes/route_path.dart';
+import 'package:egb_task/core/widgets/tap_effect.dart';
 import 'package:egb_task/features/home_screen/domain/entities/most_popular_entity.dart';
 import 'package:egb_task/features/home_screen/presentaion/controllers/most_popular_cubit/most_popular_cubit.dart';
 import 'package:flutter/material.dart';
@@ -49,16 +51,22 @@ class _MostPopularTabState extends State<MostPopularTab> {
       ),
       itemBuilder: (context, index) {
         final movie = movies[index];
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: CachedNetworkImage(
-            imageUrl: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Container(color: Colors.grey[800]),
-            errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.white),
+        return TapEffect(
+          onClick: () {
+            Navigator.pushNamed(context, RoutePath.detailsScreen,
+                arguments: {'movie_id': movie.id});
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: CachedNetworkImage(
+              imageUrl: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(color: Colors.grey[800]),
+              errorWidget: (context, url, error) =>
+              const Icon(Icons.error, color: Colors.white),
+            ),
           ),
-        );
-      },
+        );      },
     );
   }
 

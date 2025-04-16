@@ -2,6 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:egb_task/core/constants/api_endpoints.dart';
 import 'package:egb_task/core/data_source/dio_backend.dart';
 import 'package:egb_task/core/data_source/logging_interceptor.dart';
+import 'package:egb_task/features/details_screen/data/data/details_data_source.dart';
+import 'package:egb_task/features/details_screen/data/repository/details_repository_impl.dart';
+import 'package:egb_task/features/details_screen/domain/use_cases/get_moovie_details_use_case.dart';
 import 'package:egb_task/features/home_screen/data/data_source/remote_data_source.dart';
 import 'package:egb_task/features/home_screen/data/repository/home_repository_implementaion.dart';
 import 'package:egb_task/features/home_screen/domain/use_cases/get_most_popular_use_case.dart';
@@ -49,12 +52,20 @@ Future<void> init() async {
       sl.get<SearchRepositoryImpl>(),
     ),
   );
+  sl.registerLazySingleton<GetMovieDetailsUseCase>(
+    () => GetMovieDetailsUseCase(
+      sl.get<DetailsRepositoryImpl>(),
+    ),
+  );
   ////////////////////////////////////// Repository ///////////////////////////////////////
   sl.registerLazySingleton<HomeRepositoryImplementation>(
     () => HomeRepositoryImplementation(sl.get<RemoteDataSource>()),
   );
   sl.registerLazySingleton<SearchRepositoryImpl>(
     () => SearchRepositoryImpl(sl.get<SearchRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<DetailsRepositoryImpl>(
+    () => DetailsRepositoryImpl(sl.get<DetailsDataSource>()),
   );
 
 ////////////////////////////////////// remote data source ///////////////////////////////////////
@@ -63,6 +74,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<SearchRemoteDataSource>(
     () => SearchRemoteDataSource(),
+  );
+  sl.registerLazySingleton<DetailsDataSource>(
+    () => DetailsDataSource(),
   );
 
   ////////////////////////////////////// Network ///////////////////////////////////////
