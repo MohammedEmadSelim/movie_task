@@ -4,6 +4,7 @@ import 'package:egb_task/core/responsive/dimension.dart';
 import 'package:egb_task/core/routes/route_path.dart';
 import 'package:egb_task/core/theme/colors.dart';
 import 'package:egb_task/core/widgets/custom_svg.dart';
+import 'package:egb_task/core/widgets/custom_text.dart';
 import 'package:egb_task/core/widgets/custom_text_field.dart';
 import 'package:egb_task/core/widgets/tap_effect.dart';
 import 'package:egb_task/features/search/presentaion/controllers/search_cubit/search_cubit.dart';
@@ -52,31 +53,31 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   SizedBox(height: 20.h),
                   if (state is SearchInitial)
-                    const Center(child: Text('Search for a movie',style: TextStyle(color: Colors.white),)),
+                    const Center(child: CustomText(text: 'Search for a movie', textColor: Colors.white)),
                   if (state is SearchLoading)
                     const Center(child: CircularProgressIndicator()),
                   if (state is SearchSuccess)
-                   state.movies.isEmpty? const Center(child: Text('No results found',style: TextStyle(color: Colors.white),)):
+                    state.movies.isEmpty ? const Center(child: CustomText(text: 'No results found', textColor: Colors.white)) :
                     Expanded(
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
                         itemCount: state.movies.length,
                         itemBuilder: (context, index) {
                           final movie = state.movies[index];
-                          return Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.h),
-                            child: Row(
-                              children: [
-                                TapEffect(
-                                  onClick: () {
-                                    Navigator.pushNamed(context, RoutePath.detailsScreen,
-                                        arguments: {'movie_id': movie.id});
-                                  },
-                                  child: ClipRRect(
+                          return TapEffect(
+                            onClick: () {
+                              Navigator.pushNamed(context, RoutePath.detailsScreen,
+                                  arguments: {'movie_id': movie.id});
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.h),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
                                     child: CachedNetworkImage(
                                       errorWidget: (context, url, error) => const Icon(
-                                        Icons.image,
+                                        Icons.broken_image,
                                       ),
                                       imageUrl:
                                       'https://image.tmdb.org/t/p/w500${movie.posterPath}',
@@ -85,43 +86,48 @@ class _SearchScreenState extends State<SearchScreen> {
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: 12.w),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        movie.title,
-                                        style: TextStyle(
-                                          fontSize: 16.sp,
+                                  SizedBox(width: 12.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        CustomText(
+                                          text: movie.title,
+                                          fontSizes: 16.sp,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                          textColor: Colors.white,
+                                          maxLines: 2,
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      Text(
-                                        '⭐ ${movie.voteAverage}',
-                                        style: TextStyle(
-                                          color: Colors.amber,
-                                          fontSize: 14.sp,
+                                        SizedBox(height: 4.h),
+                                        Row(
+                                          children: [
+                                            CustomSvgImage(image: AppIcons.star,height: 16.h,),
+                                            SizedBox(width: 4.h),
+                                            CustomText(
+                                              text: '${movie.voteAverage}',
+                                              fontSizes: 14.sp,
+                                              textColor: kOrangeStar,
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      SizedBox(height: 2.h),
-                                      Text(
-                                        '📅 ${movie.releaseDate}',
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: kGreyText,
+                                        SizedBox(height: 2.h),
+                                        Row(
+                                          children: [
+                                            CustomSvgImage(image: AppIcons.calendar,height: 16.h,),
+                                            SizedBox(width: 4.h),
+                                            CustomText(
+                                              text: '${movie.releaseDate}',
+                                              fontSizes: 12.sp,
+                                              textColor: kGreyText,
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         },
@@ -129,9 +135,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   if (state is SearchFailure)
                     Center(
-                      child: Text(
-                        state.message,
-                        style: const TextStyle(color: Colors.white),
+                      child: CustomText(
+                        text: state.message,
+                        textColor: Colors.white,
                       ),
                     ),
                 ],

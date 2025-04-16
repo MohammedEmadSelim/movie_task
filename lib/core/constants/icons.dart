@@ -7,4 +7,5 @@ class AppIcons{
   static const String calendar = "assets/icons/Calendar.svg";
   static const String clock = "assets/icons/Clock.svg";
   static const String ticket = "assets/icons/Ticket.svg";
+  static const String star = "assets/icons/Star.svg";
 }

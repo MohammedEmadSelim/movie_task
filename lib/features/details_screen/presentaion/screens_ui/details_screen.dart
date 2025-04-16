@@ -1,17 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:egb_task/core/constants/icons.dart';
+import 'package:egb_task/core/hive/adaptors/movie_entity.dart';
+import 'package:egb_task/core/hive/boxes/boxes.dart';
 import 'package:egb_task/core/responsive/dimension.dart';
 import 'package:egb_task/core/theme/colors.dart';
 import 'package:egb_task/core/widgets/custom_show_dialg.dart';
 import 'package:egb_task/core/widgets/custom_svg.dart';
 import 'package:egb_task/core/widgets/custom_text.dart';
+import 'package:egb_task/core/widgets/tap_effect.dart';
 import 'package:egb_task/features/details_screen/presentaion/components/details_taps.dart';
 import 'package:egb_task/features/details_screen/presentaion/controllers/details_cubit/details_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DetailsScreen extends StatefulWidget {
   final int movieId;
+
   const DetailsScreen({super.key, required this.movieId});
 
   @override
@@ -30,9 +35,41 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: CustomSvgImage(image: AppIcons.addToWatchIcon),
+          BlocConsumer<DetailsCubit, DetailsState>(
+            listener: (context, state) {
+              // TODO: implement listener
+            },
+            builder: (context, state) {
+              if (state is DetailsLoading) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[800]!,
+                    highlightColor: Colors.grey[700]!,
+                    child: CustomSvgImage(image: AppIcons.addToWatchIcon),
+                  ),
+                );
+              }
+              if (state is DetailsSuccess) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: TapEffect(
+                      onClick: () {
+                        watchListBox.put(state.movieDetails.id.toString(),
+                            MovieEntity(id: state.movieDetails.id,
+                                title: state.movieDetails.title,
+                                posterPath: state.movieDetails.posterPath??'',
+                                releaseDate: state.movieDetails.releaseDate,
+                                voteAverage: state.movieDetails.voteAverage,
+                                genres: state.movieDetails.genres.map((e) => e.name,).toList(),
+                                runtime: state.movieDetails.runtime));
+                     print(watchListBox.values.length);
+                      },
+                      child: CustomSvgImage(image: AppIcons.addToWatchIcon)),
+                );
+              }
+              return Container();
+            },
           ),
         ],
         backgroundColor: kDarkBackgroundColor,
@@ -55,7 +92,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
           builder: (context, state) {
             if (state is DetailsLoading) {
               return SizedBox(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height,
                 child: const Center(child: CircularProgressIndicator()),
               );
             }
@@ -79,7 +119,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     bottomLeft: Radius.circular(16.r),
                                     bottomRight: Radius.circular(16.r)),
                                 child: CachedNetworkImage(
-                                  imageUrl: 'https://image.tmdb.org/t/p/w500${movie.backdropPath}',
+                                  imageUrl:
+                                  'https://image.tmdb.org/t/p/w500${movie
+                                      .backdropPath}',
                                   height: 300.h,
                                   width: double.infinity,
                                   fit: BoxFit.cover,
@@ -90,20 +132,22 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               bottom: 120.h,
                               right: 12.w,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.6),
+                                  color: kDarkBackgroundColor.withAlpha(500),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.star, color: Colors.amber, size: 16),
+                                    CustomSvgImage(image: AppIcons.star,height: 16.h,),
                                     SizedBox(width: 4.w),
                                     CustomText(
-                                      text: movie.voteAverage.toStringAsFixed(1),
+                                      text:
+                                      movie.voteAverage.toStringAsFixed(1),
                                       fontSizes: 14.sp,
                                       fontWeight: FontWeight.w600,
-                                      textColor: Colors.white,
+                                      textColor: kOrangeStar,
                                     ),
                                   ],
                                 ),
@@ -124,8 +168,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: CachedNetworkImage(
-                                    imageUrl: 'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-                                    height: 100.h,
+                                    imageUrl:
+                                    'https://image.tmdb.org/t/p/w500${movie
+                                        .posterPath}',
+                                    height: 120.h,
                                     width: 70.w,
                                     fit: BoxFit.cover,
                                   ),
@@ -133,7 +179,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 SizedBox(width: 12.w),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       CustomText(
@@ -160,10 +207,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     children: [
                       Row(
                         children: [
-                          CustomSvgImage(image: AppIcons.calendar, height: 16.h),
+                          CustomSvgImage(
+                              image: AppIcons.calendar, height: 16.h),
                           SizedBox(width: 5.w),
                           CustomText(
-                            text: movie.releaseDate.split('-').first,
+                            text: movie.releaseDate
+                                .split('-')
+                                .first,
                             fontSizes: 13.sp,
                             textColor: kGreyText,
                           ),
@@ -178,7 +228,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           CustomSvgImage(image: AppIcons.clock, height: 16.h),
                           SizedBox(width: 5.w),
                           CustomText(
-                            text: movie.runtime != null ? '${movie.runtime} Minutes' : 'N/A',
+                            text:
+                                 '${movie.runtime} Minutes'
+                             ,
                             fontSizes: 13.sp,
                             textColor: kGreyText,
                           ),
@@ -193,7 +245,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           CustomSvgImage(image: AppIcons.ticket, height: 16.h),
                           SizedBox(width: 5.w),
                           CustomText(
-                            text: movie.genres.isNotEmpty ? movie.genres.first.name : 'Genre',
+                            text: movie.genres.isNotEmpty
+                                ? movie.genres.first.name
+                                : 'Genre',
                             fontSizes: 13.sp,
                             textColor: kGreyText,
                           ),
