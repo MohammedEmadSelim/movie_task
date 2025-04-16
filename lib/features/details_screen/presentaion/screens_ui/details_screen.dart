@@ -119,6 +119,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     bottomLeft: Radius.circular(16.r),
                                     bottomRight: Radius.circular(16.r)),
                                 child: CachedNetworkImage(
+                                  errorWidget: (context, url, error) => const Icon(
+                                    Icons.broken_image,
+                                  ),
                                   imageUrl:
                                   'https://image.tmdb.org/t/p/w500${movie
                                       .backdropPath}',
@@ -168,6 +171,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: CachedNetworkImage(
+                                    errorWidget: (context, url, error) => const Icon(
+                                      Icons.broken_image,
+                                    ),
                                     imageUrl:
                                     'https://image.tmdb.org/t/p/w500${movie
                                         .posterPath}',

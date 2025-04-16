@@ -37,57 +37,59 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: EdgeInsets.symmetric(
         horizontal: 15.w,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 80.h,
-          ),
-          CustomText(
-            text: 'What do you want to watch?',
-            textColor: kWhite,
-            fontSizes: 20.sp,
-            fontWeight: FontWeight.w600,
-          ),
-          SizedBox(
-            height: 24.h,
-          ),
-          CustomTextField(
-            focusNode: searchFocusNode,
-            hint: 'Search',
-            controller: searchController,
-            suffix: CustomSvgImage(
-              boxFit: BoxFit.none,
-              image: AppIcons.search,
-              height: 16.h,
-              width: 16.h,
-              color: kGreyText,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 80.h,
             ),
-          ),
-          SizedBox(
-            height: 21.h,
-          ),
-          BlocConsumer<TrendingMoviesCubit, TrendingMoviesState>(
-            listener: (context, state) {
-              if (state is TrendingMoviesFailure) {
-                customShowDialog(context: context, text: state.message);
-              }
-            },
-            builder: (context, state) {
-              if (state is TrendingMoviesLoading) {
-                return TrendingCarouselShimmer();
-              }
-              if (state is TrendingMoviesSuccess) {
-                return TrendingMoviesCarousel(movies: state.movies);
-              }
-              return Container(
-                child: CustomText(text: "an error occur", textColor: kRed),
-              );
-            },
-          ),
-          SizedBox(height: 60.h,),
-          MovieTabs()
-        ],
+            CustomText(
+              text: 'What do you want to watch?',
+              textColor: kWhite,
+              fontSizes: 20.sp,
+              fontWeight: FontWeight.w600,
+            ),
+            SizedBox(
+              height: 24.h,
+            ),
+            CustomTextField(
+              focusNode: searchFocusNode,
+              hint: 'Search',
+              controller: searchController,
+              suffix: CustomSvgImage(
+                boxFit: BoxFit.none,
+                image: AppIcons.search,
+                height: 16.h,
+                width: 16.h,
+                color: kGreyText,
+              ),
+            ),
+            SizedBox(
+              height: 21.h,
+            ),
+            BlocConsumer<TrendingMoviesCubit, TrendingMoviesState>(
+              listener: (context, state) {
+                if (state is TrendingMoviesFailure) {
+                  customShowDialog(context: context, text: state.message);
+                }
+              },
+              builder: (context, state) {
+                if (state is TrendingMoviesLoading) {
+                  return TrendingCarouselShimmer();
+                }
+                if (state is TrendingMoviesSuccess) {
+                  return TrendingMoviesCarousel(movies: state.movies);
+                }
+                return Container(
+                  child: CustomText(text: "an error occur", textColor: kRed),
+                );
+              },
+            ),
+            SizedBox(height: 60.h,),
+            MovieTabs()
+          ],
+        ),
       ),
     );
   }
